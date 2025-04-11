@@ -1,5 +1,5 @@
 import UserCompraProvider from "@/provider/UserCompra";
-import { Alert, AlertIcon, Box, Divider, Flex, Input} from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Divider, Flex, Input } from "@chakra-ui/react";
 
 import { UpdateSolicitacao } from "@/actions/solicitacao/service/update";
 import { CardCreateUpdate } from "@/implementes/cardCreateUpdate";
@@ -60,7 +60,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 <CardCreateUpdate.GridName
                   Nome={setDadosCard.nome}
                   readonly={readonly}
-                  w={{ base: "100%", md: "33rem" }}
+                  w={{ base: "100%", md: "40rem" }}
                 />
                 <CardCreateUpdate.GridDateNasc
                   DataSolicitacao={setDadosCard}
@@ -87,13 +87,13 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 <CardCreateUpdate.GridTel
                   index={1}
                   DataSolicitacao={setDadosCard.telefone}
-                  w={{ base: "100%", md: "10rem" }}
+                  w={{ base: "100%", md: "15rem" }}
                   readonly={readonly}
                 />
                 <CardCreateUpdate.GridTel
                   index={2}
                   DataSolicitacao={setDadosCard.telefone2}
-                  w={{ base: "100%", md: "10rem" }}
+                  w={{ base: "100%", md: "15rem" }}
                   readonly={readonly}
                 />
                 <CardCreateUpdate.GridConstrutora
@@ -254,9 +254,10 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 user={user}
               />
             )}
-            {setDadosCard.ativo && HierarquiaUser === "ADM" && <ResendSms id={setDadosCard.id} />}
+            {setDadosCard.ativo && HierarquiaUser === "ADM" && (
+              <ResendSms id={setDadosCard.id} />
+            )}
             <CreateChamado id={setDadosCard.id} />
-
           </Flex>
           <Flex
             w={"100%"}
@@ -267,17 +268,25 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             py={3}
             wrap={"wrap"}
           >
-            <BotaoPausar id={setDadosCard.id} statusPause={setDadosCard.pause} />   
+            <BotaoPausar
+              id={setDadosCard.id}
+              statusPause={setDadosCard.pause}
+            />
             <BtnIniciarAtendimento
               hierarquia={HierarquiaUser}
               status={setDadosCard.statusAtendimento}
               aprovacao={setDadosCard.Andamento}
               id={setDadosCard.id}
             />
-            <SaveBtm colorScheme="green" textColor={"black"} size={"sm"} type="submit">
+            <SaveBtm
+              colorScheme="green"
+              textColor={"black"}
+              size={"sm"}
+              type="submit"
+            >
               SALVAR
             </SaveBtm>
-            
+
             {!setDadosCard.ativo && HierarquiaUser === "ADM" ? (
               <BotaoReativarSolicitacao id={setDadosCard.id} />
             ) : (
