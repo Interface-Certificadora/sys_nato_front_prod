@@ -7,7 +7,7 @@ export function CardRoot({ children }: CardRootProps) {
   return (
     <>
       <Box
-        w={{ base: "95%", md: "95%" }}
+        w={{ base: "95%", md: "auto" }}
         p={6}
         bg="white"
         borderRadius={8}
