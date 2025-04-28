@@ -14,6 +14,7 @@ import { CriarFcweb } from "../botoes/criarFcweb";
 import BtnAlertNow from "../btn_alerta_now";
 import DistratoAlertPrint from "../Distrato_alert_print";
 import BotaoPausar from "../botoes/btn_pausar";
+import BotaoSisapp from "../bt_sisapp";
 
 // const prisma = new PrismaClient();
 type Props = {
@@ -286,6 +287,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             >
               SALVAR
             </SaveBtm>
+            <BotaoSisapp body={setDadosCard} />
 
             {!setDadosCard.ativo && HierarquiaUser === "ADM" ? (
               <BotaoReativarSolicitacao id={setDadosCard.id} />
