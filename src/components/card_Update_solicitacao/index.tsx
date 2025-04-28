@@ -269,6 +269,7 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             py={3}
             wrap={"wrap"}
           >
+            <BotaoSisapp body={setDadosCard} />
             <BotaoPausar
               id={setDadosCard.id}
               statusPause={setDadosCard.pause}
@@ -287,7 +288,6 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             >
               SALVAR
             </SaveBtm>
-            <BotaoSisapp body={setDadosCard} />
 
             {!setDadosCard.ativo && HierarquiaUser === "ADM" ? (
               <BotaoReativarSolicitacao id={setDadosCard.id} />
