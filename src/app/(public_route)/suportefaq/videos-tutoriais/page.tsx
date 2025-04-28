@@ -10,27 +10,34 @@ import {
   ModalOverlay,
   ModalContent,
   ModalBody,
-  IconButton,
+  IconButton
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CloseIcon } from "@chakra-ui/icons";
 
 export default function SuporteFaqPerguntasFrequentes() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [videos, setVideoList] = useState<any[]>([]);
 
-  const baseUrl = "https://redebrasilrp.com.br/_assets/videos/sis_nato/"
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const videos = await fetchVideos();
+        setVideoList(videos);
+      } catch (error) {
+        console.error("Erro ao buscar vídeos:", error);
+      }
+    };
 
-  const videos = [
-    { src: `${baseUrl}AssinandocomBirdIDTutorial.mp4`, title: `Assinando com Bird ID` },
-    { src: `${baseUrl}atualizandocreditoscombirdid.mp4`, title: `Atualizando Créditos com Bird ID` },
-    { src: `${baseUrl}Coletabiometricatutorial.mp4`, title: `Coleta Biométrica Tutorial` },
-    { src: `${baseUrl}Comobaixaroseucertificado.mp4`, title: `Como Baixar seu Certificado` },
-    { src: `${baseUrl}RECUPERANDOASENHADOPORTAL.mp4`, title: `Recuperando a Senha do Portal` },
-    { src: `${baseUrl}SincronizandooBIRDID.mp4`, title: `Sincronizando o Bird ID` },
-    { src: `${baseUrl}Videoconferenciatutorial.mp4`, title: `Vídeo Conferência Tutorial` },
-    { src: `${baseUrl}VTINTERFACE2.mp4`, title: `Interface Certificado Digital` },
-  ];
+    fetchData();
+  }, []);
+  const fetchVideos = async (): Promise<any[]> => {
+    const res = await fetch("/api/videosfaq/getall");
+    const data = await res.json();
+    console.log(data);
+    return data;
+  };
 
   const handleVideoClick = (videoUrl: string) => {
     setSelectedVideo(videoUrl);
@@ -71,7 +78,12 @@ export default function SuporteFaqPerguntasFrequentes() {
           >
             <video
               src={video.src}
-              style={{ width: "100%", height: "70%", objectFit: "cover", borderRadius: "8px" }}
+              style={{
+                width: "100%",
+                height: "70%",
+                objectFit: "cover",
+                borderRadius: "8px"
+              }}
             />
             <Text
               mt={2}
@@ -88,7 +100,12 @@ export default function SuporteFaqPerguntasFrequentes() {
 
       <Modal isOpen={isOpen} onClose={onClose} size="2xl">
         <ModalOverlay />
-        <ModalContent bg="black" color="white" borderRadius="md" overflow="hidden">
+        <ModalContent
+          bg="black"
+          color="white"
+          borderRadius="md"
+          overflow="hidden"
+        >
           <ModalBody p={0} position="relative">
             {selectedVideo && (
               <>
