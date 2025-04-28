@@ -13,56 +13,57 @@ import {
   useDisclosure,
   Flex,
   Link,
-  Checkbox,
+  Checkbox
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FiFileText } from "react-icons/fi";
-import { useToast } from "@chakra-ui/react"; 
+import { useToast } from "@chakra-ui/react";
 
 export default function TermosPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: session } = useSession();
   const [check, setCheck] = useState(false);
-  const toast = useToast(); 
+  const toast = useToast();
 
   const termosAceitos = session?.user.termos;
-  const idUser = Number(session?.user.id)
+  const idUser = Number(session?.user.id);
 
   useEffect(() => {
-    
-    if (!termosAceitos) {
-      (async () => {
-        const request = await getUserID(idUser);
-       if (!request?.termos){
-         onOpen();
-       };
-      })()
+    if (session) {
+      if (!termosAceitos && idUser) {
+        (async () => {
+          const request = await getUserID(idUser);
+          if (!request?.termos) {
+            onOpen();
+          }
+        })();
+      }
     }
-  }, [onOpen, termosAceitos, idUser]);
+  }, [onOpen, termosAceitos, idUser, session]);
 
   const handleCheckboxChange = (e: any) => {
     setCheck(e.target.checked);
   };
 
   const handleSubmit = async () => {
-    const data = await UpdateTermos(idUser, check)
-    if(data.error){
+    const data = await UpdateTermos(idUser, check);
+    if (data.error) {
       toast({
         title: "Erro!",
         description: data.message,
         status: "error",
         duration: 5000
-      })
-    }else{
+      });
+    } else {
       toast({
         title: "Política de Privacidade e Termos de uso Aceito!",
         description: data.message,
         status: "success",
         duration: 5000
-    })
-  }
-}
+      });
+    }
+  };
 
   return (
     <Modal
@@ -71,12 +72,9 @@ export default function TermosPage() {
       isOpen={isOpen}
       motionPreset="slideInBottom"
       closeOnOverlayClick={false}
-      closeOnEsc={false} 
+      closeOnEsc={false}
     >
-      <ModalOverlay 
-      backdropFilter="blur(10px)" 
-      bg="rgba(0, 0, 0, 0.4)" 
-      />
+      <ModalOverlay backdropFilter="blur(10px)" bg="rgba(0, 0, 0, 0.4)" />
       <ModalContent p={6}>
         <Flex
           flexDirection={"column"}
@@ -107,13 +105,22 @@ export default function TermosPage() {
               onChange={handleCheckboxChange}
               isChecked={check}
             >
-              <Text fontSize={'sm'}>
-                Declaro que li e aceito as Políticas de Privacidade e Termos de Uso.
+              <Text fontSize={"sm"}>
+                Declaro que li e aceito as Políticas de Privacidade e Termos de
+                Uso.
               </Text>
             </Checkbox>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={() => {onClose(); handleSubmit(); }} isDisabled={!check}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                onClose();
+                handleSubmit();
+              }}
+              isDisabled={!check}
+            >
               Aceitar e Continuar
             </Button>
           </ModalFooter>
