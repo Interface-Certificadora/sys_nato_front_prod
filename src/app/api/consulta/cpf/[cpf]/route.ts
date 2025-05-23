@@ -10,6 +10,7 @@ export async function GET(
 ) {
   try {
     const { cpf } = params;
+    console.log("🚀 ~ cpf:", cpf);
     const data = await prisma.nato_solicitacoes_certificado.count({
       where: {
         cpf: {
@@ -37,10 +38,15 @@ export async function GET(
     }
 
     return NextResponse.json(
-      { message: "Você pode prosseguir com o cadastro.", cpf: false, solicitacoes: [] },
+      {
+        message: "Você pode prosseguir com o cadastro.",
+        cpf: false,
+        solicitacoes: []
+      },
       { status: 200 }
     );
   } catch (error: any) {
+    console.log("🚀 ~ error:", error);
     return NextResponse.json({ error: error }, { status: 500 });
   }
 }

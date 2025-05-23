@@ -43,16 +43,13 @@ export const BotaoSisapp = ({ body }: any) => {
         })
       };
 
-      const response = await fetch(
-        "https://apinatoapp.redebrasilrp.com.br/cliente",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(requestBody)
-        }
-      );
+      const response = await fetch("/api/sisapp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(requestBody)
+      });
 
       if (response.ok) {
         const data = await response.json();
