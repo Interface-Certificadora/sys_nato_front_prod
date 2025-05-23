@@ -60,7 +60,7 @@ export default function SolicitacaoForm({
   const [Whatappdois, setWhatappdois] = useState<string>("");
   const [VendedorName, setVendedorName] = useState<string>("");
   const [Sms, setSms] = useState<boolean>(true);
-  const [Logwhats, setLogwhats] = useState<string>('');
+  const [Logwhats, setLogwhats] = useState<string>("");
   const toast = useToast();
   const router = useRouter();
   const { data: session } = useSession();
@@ -122,6 +122,7 @@ export default function SolicitacaoForm({
           }
         }
       );
+      console.log("🚀 ~ handlesubmit ~ request:", request);
       if (!request.ok) {
         toast({
           title: "Erro!",
@@ -156,10 +157,10 @@ export default function SolicitacaoForm({
           relacionamento: cpfdois && relacionamento === "sim" ? [cpfdois] : [],
           rela_quest: relacionamento === "sim" ? true : false,
           financeiro: Number(FinanceiraID),
-          ...(Logwhats && {obs: Logwhats})
+          ...(Logwhats && { obs: Logwhats })
         };
         console.log("🚀 ~ handlesubmit ~ data:", data);
-  
+
         try {
           setLoad(true);
           const response = await fetch(
@@ -235,6 +236,7 @@ export default function SolicitacaoForm({
         }
       }
     );
+    console.log("🚀 ~ checkCpf ~ request:", request);
 
     if (request.ok) {
       const response = await request.json();
@@ -252,7 +254,7 @@ export default function SolicitacaoForm({
     (async () => {
       if (relacionamento === "sim" && cpfdois.length === 11) {
         const check = await checkCpf(cpfdois);
-        if(cpf === cpfdois){
+        if (cpf === cpfdois) {
           toast({
             title: "Os CPFs nao podem ser iguais!",
             status: "warning",
@@ -334,7 +336,7 @@ export default function SolicitacaoForm({
             financeiro: Number(FinanceiraID),
             rela_quest: relacionamento === "sim" ? true : false,
             vendedorName: VendedorName,
-            ...(Logwhats && {obs: Logwhats})
+            ...(Logwhats && { obs: Logwhats })
           };
           onvalue(data);
         }
@@ -344,7 +346,29 @@ export default function SolicitacaoForm({
         ishidden("nao");
       }
     })();
-  }, [ConstrutoraID, CorretorId, DataNascimento, FinanceiraID, Logwhats, UploadCnhUrl, UploadRgUrl, VendedorName, cpf, cpfdois, email, empreendimento, ishidden, nome, onvalue, relacionamento, tel, teldois, toast, user?.hierarquia, user?.id]);
+  }, [
+    ConstrutoraID,
+    CorretorId,
+    DataNascimento,
+    FinanceiraID,
+    Logwhats,
+    UploadCnhUrl,
+    UploadRgUrl,
+    VendedorName,
+    cpf,
+    cpfdois,
+    email,
+    empreendimento,
+    ishidden,
+    nome,
+    onvalue,
+    relacionamento,
+    tel,
+    teldois,
+    toast,
+    user?.hierarquia,
+    user?.id
+  ]);
 
   if (Load) {
     return <Loading />;
@@ -421,7 +445,7 @@ export default function SolicitacaoForm({
               </chakra.p>
             </Flex>
           </FormLabel>
-          <Whatsapp setValue={tel} onValue={setTel}  retornoLog={setLogwhats}/>
+          <Whatsapp setValue={tel} onValue={setTel} retornoLog={setLogwhats} />
         </GridItem>
         <GridItem>
           <FormLabel>Whatsapp com DDD 2</FormLabel>
