@@ -21,7 +21,8 @@ export async function GET(request: NextRequest) {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.token}`
-        }
+        },
+        next: { revalidate: 30 },
       }
     );
 

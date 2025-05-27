@@ -17,7 +17,8 @@ export async function GET() {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.token}`
-        }
+        },
+        next: { revalidate: 30 },
       }
     );
 
