@@ -1,3 +1,4 @@
+'use server'
 export default async function getLastPoliticaTermo() {
 
     return await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/get-infos/termos`, {
@@ -5,7 +6,11 @@ export default async function getLastPoliticaTermo() {
         headers: {
             "Content-Type": "application/json",
         },
+        cache: "force-cache"
     })
         .then((response) => response.json())
-
+        .catch((error) => {
+            console.error("Erro ao buscar políticas de termos:", error);
+            return null;
+        });
 }
