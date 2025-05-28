@@ -16,6 +16,9 @@ export async function GetAllFinanceiras() {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${session?.token}`
+        },
+        next: {
+            revalidate: 10
         }
     })
 

@@ -10,15 +10,28 @@ interface SetDataProps {
   user?: any;
 }
 
-export default function CardListAlertCliente({ Id, DataAlert, user}: SetDataProps) {
+export default function CardListAlertCliente({
+  Id,
+  DataAlert,
+  user
+}: SetDataProps) {
   const [Data, setData] = useState<any>([]);
   const hierarquia = user?.hierarquia;
   const { Alert } = useAlertContext();
 
   useEffect(() => {
-    if (Alert) RequesteAlert();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Alert]);
+    if (Alert) {
+      RequesteAlert();
+    }
+    if (DataAlert.length > 0) {
+      setData(DataAlert);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [DataAlert, Alert]);
+
+  const AtualizarAlert = (e: number) => {
+    if (e === 1) RequesteAlert();
+  };
 
   const RequesteAlert = async () => {
     const req = await fetch(`/api/alerts/solicitacao/${Id}`, {
@@ -32,16 +45,6 @@ export default function CardListAlertCliente({ Id, DataAlert, user}: SetDataProp
       const res = await req.json();
       setData(res);
     }
-  };
-
-  useEffect(() => {
-    if (DataAlert.length > 0) {
-      setData(DataAlert);
-    }
-  }, [DataAlert]);
-
-  const AtualizarAlert = (e: number) => {
-    if (e === 1) RequesteAlert();
   };
 
   return (

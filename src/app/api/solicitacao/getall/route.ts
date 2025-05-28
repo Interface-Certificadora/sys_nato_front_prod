@@ -77,7 +77,7 @@ export async function GET(request: Request): Promise<NextResponse> {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        next: { revalidate: 30 },
+        next: { revalidate: 10 },
       }
     );
 

@@ -16,7 +16,6 @@ import DistratoAlertPrint from "../Distrato_alert_print";
 import BotaoPausar from "../botoes/btn_pausar";
 import BotaoSisapp from "../bt_sisapp";
 
-// const prisma = new PrismaClient();
 type Props = {
   setDadosCard: solictacao.SolicitacaoGetType;
   user: SessionUserType.User;
@@ -33,9 +32,9 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
         <CardCreateUpdate.Form action={UpdateSolicitacao}>
           <UserCompraProvider>
             <Box hidden>
-              <Input value={setDadosCard.id} name="id_cliente" readOnly />
+              <Input value={setDadosCard?.id} name="id_cliente" readOnly />
               <Input
-                value={setDadosCard.ativo.toString()}
+                value={setDadosCard?.ativo.toString() || ""}
                 name="ativo"
                 readOnly
               />
@@ -54,12 +53,12 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 <input
                   type="text"
                   hidden
-                  value={setDadosCard.ativo.toString()}
+                  value={setDadosCard?.ativo.toString() || ""}
                   readOnly
                   name="StatusAtivo"
                 />
                 <CardCreateUpdate.GridName
-                  Nome={setDadosCard.nome}
+                  Nome={setDadosCard?.nome || ""}
                   readonly={readonly}
                   w={{ base: "100%", md: "40rem" }}
                 />
@@ -87,13 +86,13 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 />
                 <CardCreateUpdate.GridTel
                   index={1}
-                  DataSolicitacao={setDadosCard.telefone}
+                  DataSolicitacao={setDadosCard?.telefone}
                   w={{ base: "100%", md: "15rem" }}
                   readonly={readonly}
                 />
                 <CardCreateUpdate.GridTel
                   index={2}
-                  DataSolicitacao={setDadosCard.telefone2}
+                  DataSolicitacao={setDadosCard?.telefone2}
                   w={{ base: "100%", md: "15rem" }}
                   readonly={readonly}
                 />
@@ -136,12 +135,12 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 />
                 <CardCreateUpdate.GridTagsAlert
                   user={user}
-                  ID={setDadosCard.id}
+                  ID={setDadosCard?.id}
                   w={{ base: "100%", md: "18rem" }}
                 />
                 <CardCreateUpdate.GridSuporte
                   user={user}
-                  ID={setDadosCard.id}
+                  ID={setDadosCard?.id}
                   w={{ base: "100%", md: "16rem" }}
                 />
                 <CardCreateUpdate.GridLink
@@ -162,22 +161,22 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 px={4}
                 justifyContent={{ base: "center", md: "space-evenly" }}
               >
-                <CardCreateUpdate.GridUpdateDocument
+                {/* <CardCreateUpdate.GridUpdateDocument
                   tag="CNH"
-                  suspenso={setDadosCard.docSuspenso}
-                  Url={setDadosCard.uploadCnh}
+                  suspenso={setDadosCard?.docSuspenso}
+                  Url={setDadosCard?.uploadCnh}
                   w={{ base: "100%", md: "19rem" }}
                   Hierarquia={!HierarquiaUser ? "USER" : HierarquiaUser}
                 />
                 <CardCreateUpdate.GridUpdateDocument
                   tag="RG"
-                  suspenso={setDadosCard.docSuspenso}
-                  Url={setDadosCard.uploadRg}
+                  suspenso={setDadosCard?.docSuspenso}
+                  Url={setDadosCard?.uploadRg}
                   w={{ base: "100%", md: "19rem" }}
                   Hierarquia={!HierarquiaUser ? "USER" : HierarquiaUser}
-                />
+                /> */}
               </Flex>
-              {setDadosCard.construtora.id === 5 ? (
+              {setDadosCard?.construtora.id === 5 ? (
                 <Box>
                   <Alert
                     justifyContent={"space-between"}
@@ -211,13 +210,13 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
                 />
               </Flex>
               <Flex w={"100%"}>
-                {setDadosCard.distrato && setDadosCard.ativo && (
+                {setDadosCard?.distrato && setDadosCard?.ativo && (
                   <DistratoAlertPrint
-                    userId={setDadosCard.distrato_id}
-                    userDateTime={setDadosCard.distrato_dt}
+                    userId={setDadosCard?.distrato_id}
+                    userDateTime={setDadosCard?.distrato_dt}
                   />
                 )}
-                {!setDadosCard.ativo && (
+                {!setDadosCard?.ativo && (
                   <Alert status="error" variant="left-accent">
                     <AlertIcon />
                     Solicitação excluída
@@ -243,22 +242,22 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
             px={4}
             wrap={"wrap"}
           >
-            {setDadosCard.distrato && setDadosCard.ativo && (
-              <CardCreateUpdate.GridDistrato Id={setDadosCard.id} User={user} />
+            {setDadosCard?.distrato && setDadosCard?.ativo && (
+              <CardCreateUpdate.GridDistrato Id={setDadosCard?.id} User={user} />
             )}
-            {!setDadosCard.id_fcw && setDadosCard.ativo && (
-              <CriarFcweb Id={setDadosCard.id} user={user} />
+            {!setDadosCard?.id_fcw && setDadosCard?.ativo && (
+              <CriarFcweb Id={setDadosCard?.id} user={user} />
             )}
-            {setDadosCard.ativo && (
+            {setDadosCard?.ativo && (
               <BtCreateAlertCliente
                 DataSolicitacao={setDadosCard}
                 user={user}
               />
             )}
-            {setDadosCard.ativo && HierarquiaUser === "ADM" && (
-              <ResendSms id={setDadosCard.id} />
+            {setDadosCard?.ativo && HierarquiaUser === "ADM" && (
+              <ResendSms id={setDadosCard?.id} />
             )}
-            <CreateChamado id={setDadosCard.id} />
+            <CreateChamado id={setDadosCard?.id} />
           </Flex>
           <Flex
             w={"100%"}
@@ -289,8 +288,8 @@ export async function CardUpdateSolicitacao({ setDadosCard, user }: Props) {
               SALVAR
             </SaveBtm>
 
-            {!setDadosCard.ativo && HierarquiaUser === "ADM" ? (
-              <BotaoReativarSolicitacao id={setDadosCard.id} />
+            {!setDadosCard?.ativo && HierarquiaUser === "ADM" ? (
+              <BotaoReativarSolicitacao id={setDadosCard?.id} />
             ) : (
               <Box hidden></Box>
             )}
