@@ -12,14 +12,16 @@ export default async function GetAllSuporteId(id: number) {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${session?.token}`
+    },
+    next: {
+      revalidate: 10
     }
   })
-
-  const res = await req.json()
 
   if(!req.ok){
     return { error: true, message: "ERRO Ao buscar suporte", data: null };
   }else{
+    const res = await req.json()
     return { error: false, message: 'Sucesso', data: res }
   }
 }

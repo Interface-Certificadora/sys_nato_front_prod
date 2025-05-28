@@ -15,7 +15,6 @@ export async function GET() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session?.token}`,
       },
-      next: { revalidate: 30 },
     });
     const data = await request.json();
     

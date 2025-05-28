@@ -6,7 +6,9 @@ export default async function getLastPoliticaTermo() {
         headers: {
             "Content-Type": "application/json",
         },
-        cache: "force-cache"
+        next: {
+            revalidate: 10
+        }
     })
         .then((response) => response.json())
         .catch((error) => {
