@@ -77,13 +77,13 @@ export const Whatsapp = ({ onValue, setValue, retornoLog }: WhatsAppProps) => {
         onBlur={async (e) => {
           const valor = unMask(e.target.value);
           if (valor.length > 9) {
-            const check = await checkwhatsapp(valor);
-            if (!check) {
-              setIsvalideTel(true);
-            } else {
-              onValue(valor);
-              setIsvalideTel(false);
-            }
+            // const check = await checkwhatsapp(valor);
+            onValue(valor);
+            setIsvalideTel(false);
+            // if (!check) {
+            //   setIsvalideTel(true);
+            // } else {
+            // }
           }
         }}
       />
