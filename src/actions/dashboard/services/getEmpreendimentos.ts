@@ -13,6 +13,9 @@ export default async function GetEmpreendimentos(){
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${session?.token}`
+        },
+        next: {
+            revalidate: 10
         }
     })
 

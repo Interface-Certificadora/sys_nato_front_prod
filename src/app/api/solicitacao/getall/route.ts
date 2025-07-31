@@ -77,7 +77,7 @@ export async function GET(request: Request): Promise<NextResponse> {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        cache: "no-store",
+        next: { revalidate: 10 },
       }
     );
 
