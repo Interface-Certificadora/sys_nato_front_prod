@@ -10,6 +10,17 @@ export const metadata: Metadata = {
   description: "sistema de gestão de vendas de imóveis"
 };
 export default async function HomePage() {
+  const req = await fetch("/api/solicitacao/getall", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    next: {
+      tags: ["get_solicitacao_all"]
+    }
+  });
+  const data = await req.json();
+
   return (
     <Flex
       minH="100vh"
@@ -30,7 +41,7 @@ export default async function HomePage() {
           <PerfilHome />
         </Box>
         <Box>
-          <FilterRoute />
+          <FilterRoute data={data} />
         </Box>
       </Box>
     </Flex>
