@@ -13,7 +13,11 @@ interface FiltroData {
   financeira: number;
 }
 
-export const FilterRoute = () => {
+interface FilterRouteProps {
+  data: any;
+}
+
+export const FilterRoute = ({ data }: FilterRouteProps) => {
   const [DataFilter, setDataFilter] = useState<FiltroData>({} as FiltroData);
   const [Dados, setDados] = useState<solictacao.SolicitacaoGetType[]>(
     [] as any
@@ -23,24 +27,29 @@ export const FilterRoute = () => {
   const [Load, setLoad] = useState<boolean>(false);
 
   useEffect(() => {
-    (async () => {
-      const req = await fetch("/api/solicitacao/getall", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        next: {
-          tags: ["get_solicitacao_all"]
-        }
-      });
-      const data = await req.json();
-      if (req.ok) {
-        setDados(data.data);
-        setTotal(data.total);
-        setPagAtual(data.page);
-      }
-    })();
-  }, []);
+    if (data) {
+      setDados(data.data);
+      setTotal(data.total);
+      setPagAtual(data.page);
+    }
+    // (async () => {
+    //   const req = await fetch("/api/solicitacao/getall", {
+    //     method: "GET",
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     },
+    //     next: {
+    //       tags: ["get_solicitacao_all"]
+    //     }
+    //   });
+    //   const data = await req.json();
+    //   if (req.ok) {
+    //     setDados(data.data);
+    //     setTotal(data.total);
+    //     setPagAtual(data.page);
+    //   }
+    // })();
+  }, [data]);
 
   const handleFilter = (filtroData: FiltroData) => {
     setDataFilter(filtroData);
