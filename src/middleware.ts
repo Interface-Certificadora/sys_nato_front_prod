@@ -3,48 +3,33 @@ import { APP_ROUTES } from "./constants/app-routes";
 import { createRouteMatch } from "./lib/route";
 
 export async function middleware(req: NextRequest) {
-  const cookiesAll = req.cookies.getAll();
-  const filtro = cookiesAll.filter((cookie) =>
-    cookie.name.includes("next-auth.session-token")
-  );
-  const session = filtro[0]?.value;
-
+  const session = req.cookies.get("next-auth.session-token")?.value;
   const { pathname } = req.nextUrl;
+
+  // Redirecionamento de /home para /
+  if (pathname === "/home") {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
 
   const { isPlublicRoute, isPrivateRoute, isBlockRoute } = createRouteMatch(
     APP_ROUTES,
     req
   );
 
-  if (pathname === "/") {
-    if (!session) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-    return NextResponse.next();
-  }
-
-  if (pathname === "/home") {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-
-  if (isPrivateRoute) {
-    if (!session) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-    return NextResponse.next();
-  }
-
+  // Se não tem sessão
   if (!session) {
-    if (isBlockRoute) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-    if (isPrivateRoute) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
+    // Permite acesso a rotas públicas
     if (isPlublicRoute) {
       return NextResponse.next();
     }
+    // Redireciona para login se tentar acessar rota privada ou bloqueada
+    if (isPrivateRoute || isBlockRoute || pathname === "/") {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
   }
+
+  // Se tem sessão, permite acesso
+  return NextResponse.next();
 }
 
 export const config = {

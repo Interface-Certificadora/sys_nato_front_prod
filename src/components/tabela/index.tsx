@@ -136,7 +136,6 @@ export function Tabela({
       : item.pause && user?.hierarquia === "ADM" 
       ? "yellow.200" :
       "transparent";
-    console.log(colors, item.pause);
     const fontColor =
       colors === "red.400"
         ? "white"

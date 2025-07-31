@@ -32,7 +32,6 @@ export const auth: NextAuthOptions = {
           );
 
           const retorno = await res.json();
-          console.log("🚀 ~ authorize ~ retorno:", retorno);
 
           const { token, user } = retorno;
 

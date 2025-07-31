@@ -9,9 +9,9 @@ import {
   Flex,
   CircularProgress
 } from "@chakra-ui/react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SenhaComponent } from "../Senha";
 
 export const FormLogin = () => {
@@ -20,6 +20,14 @@ export const FormLogin = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const router = useRouter();
+  const { data: session, status } = useSession();
+
+  // Aguarda sessão ser estabelecida após login para redirecionar
+  useEffect(() => {
+    if (loading && status === "authenticated" && session) {
+      router.replace("/");
+    }
+  }, [session, status, loading, router]);
 
   const handlesubmit = async () => {
     setLoading(true);
@@ -36,9 +44,8 @@ export const FormLogin = () => {
         status: "error",
         duration: 5000
       });
-    } else {
-      router.replace("/");
     }
+    // O redirecionamento será feito pelo useEffect quando a sessão for estabelecida
   };
 
   if (loading) {
