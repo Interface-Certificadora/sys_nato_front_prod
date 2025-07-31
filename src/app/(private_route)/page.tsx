@@ -7,6 +7,7 @@ import { auth } from "@/lib/auth_confg";
 import { Box, Flex } from "@chakra-ui/react";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "HOME",
@@ -18,21 +19,39 @@ export default async function HomePage() {
   const token = session?.token;
 
   if (!session) {
-    window.location.href = "/login";
+    redirect("/login");
   }
 
-  const req = await fetch(
-    `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      cache: "no-store"
+  let data = [];
+  
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+    
+    const req = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        cache: "no-cache",
+        signal: controller.signal
+      }
+    );
+    
+    clearTimeout(timeoutId);
+    
+    if (!req.ok) {
+      throw new Error(`HTTP error! status: ${req.status}`);
     }
-  );
-  const data = await req.json();
+    
+    data = await req.json();
+  } catch (error) {
+    console.error("Erro ao carregar solicitações:", error);
+    data = []; // Fallback para array vazio
+  }
 
   return (
     <Flex
