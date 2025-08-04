@@ -36,8 +36,6 @@ export default async function HomePage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        cache: "no-cache",
-        signal: controller.signal
       }
     );
     

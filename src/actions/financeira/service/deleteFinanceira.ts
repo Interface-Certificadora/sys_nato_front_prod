@@ -1,6 +1,7 @@
 'use server'
 import { auth } from "@/lib/auth_confg";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 
 export async function DeleteFinanceira(id: string) {
 
@@ -22,7 +23,8 @@ export async function DeleteFinanceira(id: string) {
     return { error: true, message: "ERRO Ao Atualizar Financeira", status: 500 };
   }
   
-  if(req.ok){
+  if (req.ok) {
+    revalidateTag("financeira-all");
     return { error: false, message: "Sucesso ao Atualizar Financeira", status: 200 };
   }
 

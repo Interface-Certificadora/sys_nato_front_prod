@@ -1,6 +1,7 @@
-'use server';
+"use server";
 import { auth } from "@/lib/auth_confg";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function UpdateFinanceira(_: any, data: FormData) {
@@ -23,21 +24,24 @@ export async function UpdateFinanceira(_: any, data: FormData) {
     };
   }
 
-  const req = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/financeiro/update/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${session?.token}`
-    },
-    body: JSON.stringify({
-      cnpj: cnpj,
-      razaosocial: razaoSocial,
-      tel: telefone,
-      email: email,
-      responsavel: responsavel,
-      fantasia: fantasia
-    })
-  });
+  const req = await fetch(
+    `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/financeiro/update/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.token}`
+      },
+      body: JSON.stringify({
+        cnpj: cnpj,
+        razaosocial: razaoSocial,
+        tel: telefone,
+        email: email,
+        responsavel: responsavel,
+        fantasia: fantasia
+      })
+    }
+  );
 
   const res = await req.json();
 
@@ -49,7 +53,6 @@ export async function UpdateFinanceira(_: any, data: FormData) {
       status: req.status
     };
   }
-  
+  revalidateTag("financeira-all");
   redirect("/financeiras");
-
 }

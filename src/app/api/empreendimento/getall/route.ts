@@ -18,7 +18,10 @@ export async function GET() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.token}`
         },
-        next: { revalidate: 30 },
+        next: { 
+          revalidate: 60 * 30,
+          tags: ["empreendimento-all"]
+         },
       }
     );
 
