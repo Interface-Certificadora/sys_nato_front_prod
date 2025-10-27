@@ -2,16 +2,19 @@
 
 import { Button, Flex, Link, Text } from "@chakra-ui/react";
 import { FaPhoneVolume } from "react-icons/fa";
+import { memo } from "react";
 
-export default function FooterComponent() {
-  const bg = "#00713D";
+const FOOTER_BG = "#00713D";
+const PHONE_NUMBER = "(16) 3325-4134";
+const COPYRIGHT_TEXT = "Copyright © 2024 Rede BrasilRP";
 
+export default memo(function FooterComponent() {
   return (
     <Flex
       w="100%"
       h="5vh"
       p="20px"
-      bg={bg}
+      bg={FOOTER_BG}
       justifyContent={{ base: "center", md: "space-evenly" }}
       alignItems="center"
       flexDirection={{ base: "column", md: "row" }}
@@ -33,13 +36,14 @@ export default function FooterComponent() {
           leftIcon={<FaPhoneVolume />}
           size="sm"
         >
-          (16) 3325-4134
+          {PHONE_NUMBER}
         </Button>
       </Flex>
+
       <Button variant="link" color="white" size="sm">
-          <Link href="/suportefaq" isExternal>
-          FAQ 
-          </Link>
+        <Link href="/suportefaq" isExternal>
+          FAQ
+        </Link>
       </Button>
 
       <Flex
@@ -48,15 +52,11 @@ export default function FooterComponent() {
         mt={{ base: "10px", md: "0" }}
         flexDirection={{ base: "column", md: "row" }}
       >
-        <Button variant="link" color="white" size="sm" >
-          <Link href="/termos/uso">
-          Termos de Uso
-          </Link>
-        </Button>   
         <Button variant="link" color="white" size="sm">
-          <Link href="/termos/privacidade">
-          Politica de Privacidade
-          </Link>
+          <Link href="/termos/uso">Termos de Uso</Link>
+        </Button>
+        <Button variant="link" color="white" size="sm">
+          <Link href="/termos/privacidade">Politica de Privacidade</Link>
         </Button>
       </Flex>
 
@@ -69,8 +69,8 @@ export default function FooterComponent() {
         flexDirection={{ base: "column", md: "row" }}
         mt={{ base: "10px", md: "0" }}
       >
-        <Text color="white">Copyright © 2024 Rede BrasilRP</Text>
+        <Text color="white">{COPYRIGHT_TEXT}</Text>
       </Flex>
     </Flex>
   );
-}
+});

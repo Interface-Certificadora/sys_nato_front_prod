@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { SenhaComponent } from "../Senha";
 
 export const FormLogin = () => {
@@ -29,7 +29,7 @@ export const FormLogin = () => {
     }
   }, [session, status, loading, router]);
 
-  const handlesubmit = async () => {
+  const handlesubmit = useCallback(async () => {
     setLoading(true);
     const res: any = await signIn("credentials", {
       email: username,
@@ -46,24 +46,34 @@ export const FormLogin = () => {
       });
     }
     // O redirecionamento será feito pelo useEffect quando a sessão for estabelecida
-  };
+  }, [username, password, toast]);
+
+  const handleUsernameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value.toUpperCase());
+  }, []);
+
+  const handlePasswordChange = useCallback((value: string) => {
+    setPassword(value);
+  }, []);
+
+  const loadingComponent = useMemo(() => (
+    <Flex
+      w={"100%"}
+      h={"100%"}
+      justifyContent={"center"}
+      alignItems={"center"}
+    >
+      <CircularProgress
+        size="10rem"
+        p={10}
+        isIndeterminate
+        color="green.300"
+      />
+    </Flex>
+  ), []);
 
   if (loading) {
-    return (
-      <Flex
-        w={"100%"}
-        h={"100%"}
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
-        <CircularProgress
-          size="10rem"
-          p={10}
-          isIndeterminate
-          color="green.300"
-        />
-      </Flex>
-    );
+    return loadingComponent;
   }
   return (
     <>
@@ -74,13 +84,13 @@ export const FormLogin = () => {
           size={"lg"}
           border={"1px solid #b8b8b8cc"}
           textTransform={"uppercase"}
-          onChange={(e: any) => setUsername(e.target.value.toUpperCase())}
+          onChange={handleUsernameChange}
           value={username}
         />
         <FormLabel> Senha</FormLabel>
         <SenhaComponent
           setvalue={password}
-          onvalue={(e: any) => setPassword(e)}
+          onvalue={handlePasswordChange}
           envClick={handlesubmit}
         />
       </FormControl>

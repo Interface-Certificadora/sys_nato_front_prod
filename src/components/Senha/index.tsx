@@ -4,40 +4,43 @@ import {
   InputRightElement,
   Button,
 } from "@chakra-ui/react";
-import {  useState } from "react";
+import { useState, useCallback, memo } from "react";
 import { FaEyeSlash } from "react-icons/fa";
 import { IoEyeSharp } from "react-icons/io5";
 
 interface SenhaProps {
-  onvalue: any;
+  onvalue: (value: string) => void;
   setvalue: string;
-  envClick?: any;
+  envClick?: () => void;
 }
 
-export const SenhaComponent = ({ setvalue, onvalue, envClick }: SenhaProps) => {
-  // function PasswordInput() {
+export const SenhaComponent = memo(({ setvalue, onvalue, envClick }: SenhaProps) => {
   const [show, setShow] = useState(false);
-  const handleClick = () => setShow(!show);
-  const handleonvalue = (e: any) => {
+
+  const handleClick = useCallback(() => setShow((prev) => !prev), []);
+
+  const handleonvalue = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value: string = e.target.value;
     onvalue(value);
-  };
+  }, [onvalue]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && envClick) {
+      envClick();
+    }
+  }, [envClick]);
 
   return (
     <>
       <InputGroup size="lg">
-        <Input 
+        <Input
           pr="4.5rem"
           type={show ? "text" : "password"}
           value={setvalue}
           onChange={handleonvalue}
           border={"1px solid #b8b8b8cc"}
-          onKeyDownCapture={(e) => {
-            if (e.key === "Enter") {
-              envClick();
-            }
-          }}
+          onKeyDownCapture={handleKeyDown}
         />
         <InputRightElement width="4.5rem">
           <Button h="1.75rem" size="sm" onClick={handleClick}>
@@ -47,4 +50,4 @@ export const SenhaComponent = ({ setvalue, onvalue, envClick }: SenhaProps) => {
       </InputGroup>
     </>
   );
-};
+});
