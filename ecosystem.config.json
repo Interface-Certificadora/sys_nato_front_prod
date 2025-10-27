@@ -1,0 +1,4 @@
+{
+  "name": "crm_nato_prod",
+  "script": "yarn start"
+}

@@ -89,4 +89,4 @@ export const config = {
  * Usa Edge Runtime para melhor performance
  * O middleware será executado no Edge, mais próximo do usuário
  */
-export const runtime = "edge";
+// export const runtime = "edge";
