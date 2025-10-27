@@ -164,3 +164,5 @@ export const ModalPrimeAsses = memo(() => {
     </>
   );
 });
+
+ModalPrimeAsses.displayName = "ModalPrimeAsses";
