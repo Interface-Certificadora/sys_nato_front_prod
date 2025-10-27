@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import NextAuSessionProvider from "@/provider/NextAuSessionProvider";
 import { ProvidersChakra } from "@/provider/ChakraProviders";
+import { ColorModeScript } from "@chakra-ui/react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <ColorModeScript initialColorMode="light" />
         <NextAuSessionProvider>
           <ProvidersChakra>{children}</ProvidersChakra>
         </NextAuSessionProvider>

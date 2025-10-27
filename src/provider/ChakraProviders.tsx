@@ -1,8 +1,19 @@
 // app/providers.tsx
 'use client'
 
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, extendTheme, type ThemeConfig } from '@chakra-ui/react'
+
+const config: ThemeConfig = {
+  initialColorMode: 'light',
+  useSystemColorMode: false,
+}
+
+const theme = extendTheme({ config })
 
 export function ProvidersChakra({ children }: { children: React.ReactNode }) {
-  return <ChakraProvider>{children}</ChakraProvider>
+  return (
+    <ChakraProvider theme={theme} colorModeManager={undefined}>
+      {children}
+    </ChakraProvider>
+  )
 }
