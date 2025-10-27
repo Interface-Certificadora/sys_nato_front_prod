@@ -3,28 +3,37 @@
 import { Flex, Box, Text } from "@chakra-ui/react";
 import TextHome from "./text";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useCallback, useEffect, memo, useMemo } from "react";
 import { SelectComponent } from "../select";
 import { ModalComponent } from "../modal_alert";
 import BotaoPageChamados from "../botoes/btn_page_chamados";
 
-export default function PerfilHome() {
+export default memo(function PerfilHome() {
   const [IdEmpreedimento, setIdEmpreedimento] = useState(0);
   const [IdConstrutora, setIdConstrutora] = useState(0);
   const { data: session } = useSession();
   const user = session?.user;
 
-  //   setIdEmpreedimento(id);
-  // };
-  const SetIdConstrutora = (id: number) => {
+  // Inicializa IDs quando há apenas uma opção
+  useEffect(() => {
+    if (user?.construtora.length === 1 && !IdConstrutora) {
+      setIdConstrutora(user.construtora[0].id);
+    }
+    if (user?.empreendimento.length === 1 && !IdEmpreedimento) {
+      setIdEmpreedimento(user.empreendimento[0].id);
+    }
+  }, [user, IdConstrutora, IdEmpreedimento]);
+
+  const handleSetIdConstrutora = useCallback((id: number) => {
     setIdConstrutora(id);
-  };
-  if (user?.construtora.length === 1 && !IdConstrutora) {
-    setIdConstrutora(user.construtora[0].id);
-  }
-  if (user?.empreendimento.length === 1 && !IdEmpreedimento) {
-    setIdEmpreedimento(user.empreendimento[0].id);
-  }
+  }, []);
+
+  const construtoras = useMemo(() => {
+    return user?.construtora.map((item) => ({
+      id: item.id,
+      nome: item.fantasia
+    })) || [];
+  }, [user?.construtora]);
   return (
     <>
       {!user && null}
@@ -54,11 +63,8 @@ export default function PerfilHome() {
                   CONSTRUTORA
                 </Text>
                 <SelectComponent
-                  SetValue={user.construtora.map((item) => ({
-                    id: item.id,
-                    nome: item.fantasia
-                  }))}
-                  onValue={SetIdConstrutora}
+                  SetValue={construtoras}
+                  onValue={handleSetIdConstrutora}
                   hierarquia={session?.user.hierarquia}
                   tag={""}
                   DefaultValue={IdConstrutora}
@@ -78,4 +84,4 @@ export default function PerfilHome() {
       )}
     </>
   );
-}
+});

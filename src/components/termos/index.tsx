@@ -16,11 +16,11 @@ import {
   Checkbox
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, memo } from "react";
 import { FiFileText } from "react-icons/fi";
 import { useToast } from "@chakra-ui/react";
 
-export default function TermosPage() {
+export default memo(function TermosPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: session } = useSession();
   const [check, setCheck] = useState(false);
@@ -30,40 +30,63 @@ export default function TermosPage() {
   const idUser = Number(session?.user.id);
 
   useEffect(() => {
-    if (session) {
-      if (!termosAceitos && idUser) {
-        (async () => {
+    let isMounted = true;
+
+    if (session && !termosAceitos && idUser) {
+      (async () => {
+        try {
           const request = await getUserID(idUser);
-          if (!request?.termos) {
+          if (isMounted && !request?.termos) {
             onOpen();
           }
-        })();
-      }
+        } catch (error) {
+          console.error("Erro ao verificar termos:", error);
+        }
+      })();
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [onOpen, termosAceitos, idUser, session]);
 
-  const handleCheckboxChange = (e: any) => {
+  const handleCheckboxChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setCheck(e.target.checked);
-  };
+  }, []);
 
-  const handleSubmit = async () => {
-    const data = await UpdateTermos(idUser, check);
-    if (data.error) {
+  const handleSubmit = useCallback(async () => {
+    try {
+      const data = await UpdateTermos(idUser, check);
+      if (data.error) {
+        toast({
+          title: "Erro!",
+          description: data.message,
+          status: "error",
+          duration: 5000
+        });
+      } else {
+        toast({
+          title: "Política de Privacidade e Termos de uso Aceito!",
+          description: data.message,
+          status: "success",
+          duration: 5000
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao aceitar termos:", error);
       toast({
         title: "Erro!",
-        description: data.message,
+        description: "Erro ao processar sua solicitação",
         status: "error",
         duration: 5000
       });
-    } else {
-      toast({
-        title: "Política de Privacidade e Termos de uso Aceito!",
-        description: data.message,
-        status: "success",
-        duration: 5000
-      });
     }
-  };
+  }, [idUser, check, toast]);
+
+  const handleAcceptAndClose = useCallback(() => {
+    onClose();
+    handleSubmit();
+  }, [onClose, handleSubmit]);
 
   return (
     <Modal
@@ -115,10 +138,7 @@ export default function TermosPage() {
             <Button
               colorScheme="blue"
               mr={3}
-              onClick={() => {
-                onClose();
-                handleSubmit();
-              }}
+              onClick={handleAcceptAndClose}
               isDisabled={!check}
             >
               Aceitar e Continuar
@@ -128,4 +148,4 @@ export default function TermosPage() {
       </ModalContent>
     </Modal>
   );
-}
+});

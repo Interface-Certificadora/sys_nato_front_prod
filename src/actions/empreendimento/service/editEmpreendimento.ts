@@ -1,6 +1,7 @@
 "use server";
 import { auth } from "@/lib/auth_confg";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function EditEmpreendimento(_: any, data: FormData) {
@@ -39,5 +40,6 @@ export async function EditEmpreendimento(_: any, data: FormData) {
     return {status: req.status, message: "Error", error: true};
   }
 
+  revalidateTag("empreendimento-all");
   redirect("/empreendimentos");
 }

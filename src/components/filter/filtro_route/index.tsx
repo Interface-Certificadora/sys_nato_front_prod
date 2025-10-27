@@ -2,8 +2,9 @@
 
 import { FiltroComponent } from "../filtro_geral";
 import { Box, CircularProgress, Flex } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo, memo } from "react";
 import { Tabela } from "../../tabela";
+
 interface FiltroData {
   id: number | null;
   nome: string;
@@ -17,7 +18,7 @@ interface FilterRouteProps {
   data: any;
 }
 
-export const FilterRoute = ({ data }: FilterRouteProps) => {
+export const FilterRoute = memo(({ data }: FilterRouteProps) => {
   const [DataFilter, setDataFilter] = useState<FiltroData>({} as FiltroData);
   const [Dados, setDados] = useState<solictacao.SolicitacaoGetType[]>(
     [] as any
@@ -51,9 +52,13 @@ export const FilterRoute = ({ data }: FilterRouteProps) => {
     // })();
   }, [data]);
 
-  const handleFilter = (filtroData: FiltroData) => {
+  const handleFilter = useCallback((filtroData: FiltroData) => {
     setDataFilter(filtroData);
-  };
+  }, []);
+
+  const handleNewPage = useCallback((page: number) => {
+    setPagAtual(page);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -100,12 +105,8 @@ export const FilterRoute = ({ data }: FilterRouteProps) => {
     })();
   }, [DataFilter, PagAtual]);
 
-  const NewPageFunction = (e: any) => {
-    setPagAtual(e);
-  };
-
-  if (Load) {
-    return (
+  const loadingComponent = useMemo(
+    () => (
       <Flex
         w={"100%"}
         h={"100%"}
@@ -119,7 +120,12 @@ export const FilterRoute = ({ data }: FilterRouteProps) => {
           color="green.300"
         />
       </Flex>
-    );
+    ),
+    []
+  );
+
+  if (Load) {
+    return loadingComponent;
   }
   return (
     <>
@@ -130,10 +136,10 @@ export const FilterRoute = ({ data }: FilterRouteProps) => {
         <Tabela
           ClientData={Dados}
           AtualPage={PagAtual}
-          SetVewPage={NewPageFunction}
+          SetVewPage={handleNewPage}
           total={Total}
         />
       </Flex>
     </>
   );
-};
+});

@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth_confg";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function DELETE(
@@ -25,7 +26,7 @@ export async function DELETE(
     if (!response.ok) {
       return NextResponse.json({ message: "ERRO" }, { status: 404 });
     }
-
+    revalidateTag("construtora-all");
     return NextResponse.json(
       { message: "Construtora excluída com sucesso" },
       { status: 200 }

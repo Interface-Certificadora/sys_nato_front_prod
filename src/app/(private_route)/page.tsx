@@ -14,20 +14,11 @@ export const metadata: Metadata = {
   description: "sistema de gestão de vendas de imóveis"
 };
 
-export default async function HomePage() {
-  const session = await getServerSession(auth);
-  const token = session?.token;
-
-  if (!session) {
-    redirect("/login");
-  }
-
-  let data = [];
-  
+async function fetchSolicitacoes(token: string) {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
-    
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
     const req = await fetch(
       `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/solicitacao`,
       {
@@ -36,22 +27,33 @@ export default async function HomePage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        cache: "no-cache",
-        signal: controller.signal
+        signal: controller.signal,
+        next: { revalidate: 60 } // Revalida a cada 60 segundos
       }
     );
-    
+
     clearTimeout(timeoutId);
-    
+
     if (!req.ok) {
       throw new Error(`HTTP error! status: ${req.status}`);
     }
-    
-    data = await req.json();
+
+    return await req.json();
   } catch (error) {
     console.error("Erro ao carregar solicitações:", error);
-    data = []; // Fallback para array vazio
+    return [];
   }
+}
+
+export default async function HomePage() {
+  const session = await getServerSession(auth);
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  const token = session?.token;
+  const data = token ? await fetchSolicitacoes(token) : [];
 
   return (
     <Flex

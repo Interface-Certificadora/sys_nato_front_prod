@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth_confg";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 
 export async function DesativarEmpreendimento(id: string) {
 
@@ -26,6 +27,7 @@ export async function DesativarEmpreendimento(id: string) {
   }
 
   if(req.ok){
+    revalidateTag("empreendimento-all");
     return { error: false, message: "Sucesso ao Atualizar Empreendimento", data: res };
   }
 

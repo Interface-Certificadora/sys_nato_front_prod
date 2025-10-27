@@ -2,14 +2,15 @@
 
 import { FormLogin } from "@/components/login_form";
 import { Stack, Text, Box, Button, Link, Image } from "@chakra-ui/react";
+import { useCallback } from "react";
 
 export default function LoginPage() {
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     window.open(
       "https://arredebrasilrp.acsoluti.com.br/site/verificar-situacao-de-emissao",
       "_blank"
     );
-  };
+  }, []);
   return (
     <Stack
       height="100vh"

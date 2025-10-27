@@ -1,6 +1,7 @@
 'use server'
 import { auth } from "@/lib/auth_confg";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 
@@ -48,7 +49,7 @@ export default async function FinanceiraCreate(_: any, data: FormData) {
             status: req.status
         };
     }
-    
+    revalidateTag("financeira-all");    
     redirect('/financeiras');
 
 }

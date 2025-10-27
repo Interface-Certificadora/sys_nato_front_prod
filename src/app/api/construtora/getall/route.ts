@@ -22,7 +22,10 @@ export async function GET(request: NextRequest) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.token}`
         },
-        next: { revalidate: 30 },
+        next: { 
+          revalidate: 60 * 30,
+          tags: ["construtora-all"]
+         },
       }
     );
 

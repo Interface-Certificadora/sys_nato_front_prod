@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth_confg";
+import { revalidateTag } from "next/cache";
 
 export async function POST(request: Request) {
   try {
@@ -26,7 +27,7 @@ export async function POST(request: Request) {
       throw new Error("Erro ao criar o registro");
     }
     const retorno = await response.json();
-
+    revalidateTag("financeira-all");
     return NextResponse.json(
       {
         message: "Registro criado com sucesso",
