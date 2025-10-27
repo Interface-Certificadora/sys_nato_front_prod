@@ -51,3 +51,5 @@ export const SenhaComponent = memo(({ setvalue, onvalue, envClick }: SenhaProps)
     </>
   );
 });
+
+SenhaComponent.displayName = "SenhaComponent";

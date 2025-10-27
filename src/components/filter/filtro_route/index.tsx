@@ -143,3 +143,5 @@ export const FilterRoute = memo(({ data }: FilterRouteProps) => {
     </>
   );
 });
+
+FilterRoute.displayName = "FilterRoute";

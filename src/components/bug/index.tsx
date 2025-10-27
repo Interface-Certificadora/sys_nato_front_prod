@@ -46,3 +46,5 @@ export const BugReport = memo(() => {
 
   return <>{bugList}</>;
 });
+
+BugReport.displayName = "BugReport";
